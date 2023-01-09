@@ -58,6 +58,8 @@ export const ChatSonicApp: FC = () => {
   };
 
   const onKeyDown = (e: any) => {
+          console.log(e)
+          console.log(e.altKey)
       if (e.altKey && e.key === 'Enter') {
           console.log(e.target.value)
           console.log(e)
