@@ -58,7 +58,8 @@ export const ChatSonicApp: FC = () => {
   };
 
   const onKeyDown = (e: any) => {
-      const { updateValue, value } = e.props;
+    console.log(e)
+      const { value } = e.props;
       if (e.altKey && e.key === 'Enter') {
           e.preventDefault();
           updateValue(value);
