@@ -1,5 +1,7 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { ManagementClient } from '@kontent-ai/management-sdk';
+import { trackPromise } from 'react-promise-tracker';
+import LoadingSpinner from './spinner/spinner';
 
 export const ChatSonicApp: FC = () => {
   const [config, setConfig] = useState<Config | null>(null);
@@ -10,6 +12,7 @@ export const ChatSonicApp: FC = () => {
   const [variantCodeName, setVariantCodeName] = useState<string | null>(null);
   const [watchedElementValue, setWatchedElementValue] = useState<string | null>(null);
   const [elementValue, setElementValue] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const updateWatchedElementValue = useCallback((codename: string) => {
     CustomElement.getElementValue(codename, v => typeof v === 'string' && setWatchedElementValue(v));
@@ -86,6 +89,7 @@ export const ChatSonicApp: FC = () => {
   }
 
   async function generateAIContent(value: string) {
+    setIsLoading(true);
     const options = {
       method: 'POST',
       headers: {
@@ -99,11 +103,18 @@ export const ChatSonicApp: FC = () => {
         input_text: value
       })
     };
-
+    trackPromise(
     fetch('https://api.writesonic.com/v2/business/content/chatsonic?engine=premium', options)
       .then(response => response.json())
-      .then(response => saveContent(response))
-      .catch(err => console.error(err));
+      .then(response => {
+        saveContent(response)
+        setIsLoading(false)
+      })
+      .catch(err => {         
+        setIsLoading(false);
+        console.error(err)
+      })
+    );
   }  
 
   if (!config || !projectId || elementValue === null || watchedElementValue === null || itemName === null) {
@@ -113,6 +124,7 @@ export const ChatSonicApp: FC = () => {
   return (
     <>
       <section>
+        {isLoading ? <LoadingSpinner /> : null}
         <textarea value={elementValue} onChange={e => updateValue(e.target.value)} onKeyDown={e => onKeyDown(e)} disabled={isDisabled} tabIndex={0} data-id="root" rows={1} placeholder="" />
         <button onClick={(e: any) => generateAIContent(elementValue)}>
           <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 20 20" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
