@@ -124,6 +124,7 @@ export const ChatSonicApp: FC = () => {
   return (
     <>
       <section>
+      <LoadingSpinner />
         {isLoading ? <LoadingSpinner /> : null}
         <textarea value={elementValue} onChange={e => updateValue(e.target.value)} onKeyDown={e => onKeyDown(e)} disabled={isDisabled} tabIndex={0} data-id="root" rows={1} placeholder="" />
         <button onClick={(e: any) => generateAIContent(elementValue)}>
