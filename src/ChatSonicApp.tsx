@@ -98,6 +98,16 @@ export const ChatSonicApp: FC = () => {
       .catch(err => console.error(err));
   }
 
+  const onKeyDown = (e: any) => {
+  {
+    const { updateValue, value } = e.props;
+    if (e.altKey && e.key === 'Enter') {
+        e.preventDefault();
+        updateValue(value);
+        generateAIContent(value);
+    }
+  }
+
   if (!config || !projectId || elementValue === null || watchedElementValue === null || itemName === null) {
     return null;
   }
@@ -105,7 +115,7 @@ export const ChatSonicApp: FC = () => {
   return (
     <>
       <section>
-        <textarea value={elementValue} onChange={e => updateValue(e.target.value)} disabled={isDisabled} tabIndex={0} data-id="root" rows={1} placeholder="" />
+        <textarea value={elementValue} onChange={e => updateValue(e.target.value)} onKeyDown={e => onKeyDown(e)} disabled={isDisabled} tabIndex={0} data-id="root" rows={1} placeholder="" />
         <button onClick={(e: any) => generateAIContent(elementValue)}>
           <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 20 20" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
           </button>
