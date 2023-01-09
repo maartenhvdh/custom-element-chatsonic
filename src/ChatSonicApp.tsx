@@ -58,12 +58,7 @@ export const ChatSonicApp: FC = () => {
   };
 
   const onKeyDown = (e: any) => {
-          console.log(e)
-          console.log(e.altKey)
       if (e.key === 'Enter') {
-          console.log(e.target.value)
-          console.log(e)
-          console.log("test")
           e.preventDefault();
           updateValue(e.target.value);
           generateAIContent(e.target.value);
@@ -75,7 +70,7 @@ export const ChatSonicApp: FC = () => {
       projectId: projectId as any,
       apiKey: config?.managementApiKey as any
     });
-    console.log(val)
+    
     await client.upsertLanguageVariant()
       .byItemCodename(codeName as string)
       .byLanguageCodename(variantCodeName as string)
