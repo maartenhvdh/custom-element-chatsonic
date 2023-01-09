@@ -33,8 +33,8 @@ export const ChatSonicApp: FC = () => {
   }, [updateWatchedElementValue]);
 
   useEffect(() => {
-    const height = document.documentElement.offsetHeight;
-    CustomElement.setHeight(height);
+    const newSize = Math.max(document.documentElement.offsetHeight, 100);
+    CustomElement.setHeight(Math.ceil(newSize));
   }, []);
 
   useEffect(() => {
