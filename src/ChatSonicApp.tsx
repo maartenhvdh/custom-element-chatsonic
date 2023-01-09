@@ -53,13 +53,14 @@ export const ChatSonicApp: FC = () => {
   }, [config, updateWatchedElementValue]);
 
   const updateValue = (newValue: string) => {
+    console.log("updatevalue")
     CustomElement.setValue(newValue);
     setElementValue(newValue);
   };
 
   const onKeyDown = (e: any) => {
       if (e.altKey && e.key === 'Enter') {
-          e.preventDefault();
+        console.log(e.target.value)
           updateValue(e.target.value);
           generateAIContent(e.target.value);
       };
