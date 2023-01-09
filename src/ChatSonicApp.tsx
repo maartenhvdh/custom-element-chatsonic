@@ -1,11 +1,13 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { ManagementClient } from '@kontent-ai/management-sdk';
 
-export const IntegrationApp: FC = () => {
+export const ChatSonicApp: FC = () => {
   const [config, setConfig] = useState<Config | null>(null);
   const [projectId, setProjectId] = useState<string | null>(null);
   const [isDisabled, setIsDisabled] = useState(false);
   const [itemName, setItemName] = useState<string | null>(null);
+  const [codeName, setItemCodeName] = useState<string | null>(null);
+  const [variantCodeName, setVariantCodeName] = useState<string | null>(null);
   const [watchedElementValue, setWatchedElementValue] = useState<string | null>(null);
   const [elementValue, setElementValue] = useState<string | null>(null);
 
@@ -23,13 +25,16 @@ export const IntegrationApp: FC = () => {
       setProjectId(context.projectId);
       setIsDisabled(element.disabled);
       setItemName(context.item.name);
+      setItemCodeName(context.item.codename);
+      setVariantCodeName(context.variant.codename);
       setElementValue(element.value ?? '');
       updateWatchedElementValue(element.config.textElementCodename);
     });
   }, [updateWatchedElementValue]);
 
   useEffect(() => {
-    CustomElement.setHeight(500);
+    const height = document.documentElement.offsetHeight;
+    CustomElement.setHeight(height);
   }, []);
 
   useEffect(() => {
@@ -54,13 +59,13 @@ export const IntegrationApp: FC = () => {
 
   const saveContent = async (val: any) => {
     const client = new ManagementClient({
-      projectId: process.env.NEXT_PUBLIC_KONTENT_PROJECT_ID as any,
-      apiKey: process.env.NEXT_PUBLIC_KONTENT_MANAGEMENT_API_KEY as any
+      projectId: projectId as any,
+      apiKey: config?.managementApiKey as any
     });
     console.log(val)
     await client.upsertLanguageVariant()
-      .byItemCodename('_ai_content___chatgtp')
-      .byLanguageCodename('default')
+      .byItemCodename(codeName as string)
+      .byLanguageCodename(variantCodeName as string)
       .withData((builder) => [
         builder.textElement({
           element: {
@@ -78,7 +83,7 @@ export const IntegrationApp: FC = () => {
       headers: {
         accept: 'application/json',
         'content-type': 'application/json',
-        'X-API-KEY': process.env.NEXT_PUBLIC_CHATSONIC_API_KEY as any
+        'X-API-KEY': config?.apiToken as any
       },
       body: JSON.stringify({
         enable_google_results: 'true',
@@ -111,18 +116,24 @@ export const IntegrationApp: FC = () => {
   );
 };
 
-IntegrationApp.displayName = 'IntegrationApp';
+ChatSonicApp.displayName = 'IntegrationApp';
 
 type Config = Readonly<{
   // expected custom element's configuration
   textElementCodename: string;
+  managementApiKey: string;
+  apiToken: string;
 }>;
 
 // check it is the expected configuration
 const isConfig = (v: unknown): v is Config =>
   isObject(v) &&
   hasProperty(nameOf<Config>('textElementCodename'), v) &&
-  typeof v.textElementCodename === 'string';
+  typeof v.textElementCodename === 'string' &&
+  hasProperty(nameOf<Config>('managementApiKey'), v) &&
+  typeof v.managementApiKey === 'string' &&
+  hasProperty(nameOf<Config>('apiToken'), v) &&
+  typeof v.apiToken === 'string';
 
 const hasProperty = <PropName extends string, Input extends {}>(propName: PropName, v: Input): v is Input & { [key in PropName]: unknown } =>
   v.hasOwnProperty(propName);

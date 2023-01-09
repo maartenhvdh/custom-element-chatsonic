@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { EnsureKontentAsParent } from "./EnsureKontentAsParent";
-import { IntegrationApp } from './IntegrationApp';
+import { ChatSonicApp } from './ChatSonicApp';
 import "./index.css";
 
 const rootElement = document.getElementById('root');
@@ -15,7 +15,7 @@ const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
     <EnsureKontentAsParent>
-      <IntegrationApp />
+      <ChatSonicApp/>
     </EnsureKontentAsParent>
   </React.StrictMode>
 );
