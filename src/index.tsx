@@ -15,7 +15,7 @@ const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
     <EnsureKontentAsParent>
-      <ChatSonicApp/>
+      <ChatSonicApp />
     </EnsureKontentAsParent>
   </React.StrictMode>
 );

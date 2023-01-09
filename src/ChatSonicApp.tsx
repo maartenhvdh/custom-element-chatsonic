@@ -57,6 +57,15 @@ export const ChatSonicApp: FC = () => {
     setElementValue(newValue);
   };
 
+  const onKeyDown = (e: any) => {
+      const { updateValue, value } = e.props;
+      if (e.altKey && e.key === 'Enter') {
+          e.preventDefault();
+          updateValue(value);
+          generateAIContent(value);
+      };
+    };
+
   const saveContent = async (val: any) => {
     const client = new ManagementClient({
       projectId: projectId as any,
@@ -96,17 +105,7 @@ export const ChatSonicApp: FC = () => {
       .then(response => response.json())
       .then(response => saveContent(response))
       .catch(err => console.error(err));
-  }
-
-  const onKeyDown = (e: any) => {
-  {
-    const { updateValue, value } = e.props;
-    if (e.altKey && e.key === 'Enter') {
-        e.preventDefault();
-        updateValue(value);
-        generateAIContent(value);
-    }
-  }
+  }  
 
   if (!config || !projectId || elementValue === null || watchedElementValue === null || itemName === null) {
     return null;
@@ -124,7 +123,7 @@ export const ChatSonicApp: FC = () => {
   );
 };
 
-ChatSonicApp.displayName = 'IntegrationApp';
+ChatSonicApp.displayName = 'ChatSonicApp';
 
 type Config = Readonly<{
   // expected custom element's configuration
