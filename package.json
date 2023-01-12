@@ -1,5 +1,5 @@
 {
-  "name": "integration-template-react",
+  "name": "custom-element-chat-sonic",
   "version": "1.0.0",
   "dependencies": {
     "@kontent-ai/management-sdk": "^3.4.0",
